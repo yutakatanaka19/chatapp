@@ -1,1 +1,33 @@
-I
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}index{% endblock title %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+    <link rel="stylesheet" href="{% static "myapp/css/base.css" %}">
+    <link rel="stylesheet" href={% block css %}"{% static "myapp/css/index.css" %}"{% endblock css %}>
+</head>
+<body>        
+    <main>
+        <div>
+            <div>
+                <div class="tornado">
+                    <div>{% block header %}{% endblock header %}</div>
+                </div>
+                {% block contents %}
+                    <div class="center">
+                        <div><a href="{% url "login_view" %}"><div>ログイン</div></a></div>
+                        <div><a href="{% url "signup_view" %}"><div>会員登録</div></a></div>
+                    </div>
+                {% endblock contents %}
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

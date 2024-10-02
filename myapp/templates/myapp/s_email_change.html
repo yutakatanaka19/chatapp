@@ -4,22 +4,26 @@
 
 {% block title %}friends{% endblock title %}
 
-{% block css %}"{% static "myapp/css/setting.css" %}"{% endblock css %}
+{% block css %}"{% static "myapp/css/sec.css" %}"{% endblock css %}
 
-{% block header %}設定{% endblock header %}
+{% block header %}メールアドレス変更{% endblock header %}
 
 {% block contents %}
 <div class="container">
-    <div class="center">
-        <div><a href="{% url "suc" %}"><div>ユーザ名変更</div></a></div>
-        <div><a href="{% url "sec" %}"><div>メールアドレス変更</div></a></div>
-        <div><a href="{% url "sic" %}"><div>アイコン変更</div></a></div>
-        <div><a href="{% url "spc" %}"><div>パスワード変更</div></a></div>
-        <form action="{% url 'logout_view' %}" method="post">
-            {% csrf_token %}
-            <button type="submit">ログアウト</button>
-        </form>
-    </div>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            {{ form.email.label_tag }}
+            {{ form.email }}
+        </div>
+        <button type="submit">変更</button>
+        <div>
+            {% for field in form %}
+            {{ field.errors }}
+            {% endfor %}
+            
+        </div>
+    </form>
 </div>
 <div class="footer">
     <div class="footer_film">

@@ -1,1 +1,41 @@
-SU
+{% extends "myapp/index.html" %}
+
+{% load static %}
+
+{% block title %}signup{% endblock title %}
+
+{% block css %}"{% static "myapp/css/signup.css" %}"{% endblock css %}
+
+{% block header %}会員登録{% endblock header %}
+
+{% block contents %}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-group">
+        {{ form.username.label_tag }}
+        {{ form.username }}
+    </div>
+    <div class="form-group sp">
+        <label for="id_email">Email<br>address:</label>
+        {{ form.email }}
+    </div>
+    <div class="form-group">
+        {{ form.password1.label_tag }}
+        {{ form.password1 }}
+    </div>
+    <div class="form-group sp">
+        <label for="id_password2">Password<br>confirmation:</label>
+        {{ form.password2 }}
+    </div>
+    <div class="form-group pp">
+        <label for="id_profile_picture">Img:</label>
+        {{ form.profile_picture }}
+    </div>
+    <button type="submit">Submit</button>
+    <div>
+        {% for field in form %}
+        {{ field.errors }}
+        {% endfor %}
+    </div>
+</form>
+{% endblock contents %}

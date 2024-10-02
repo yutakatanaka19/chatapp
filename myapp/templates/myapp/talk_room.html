@@ -1,1 +1,33 @@
-TR
+{% extends "myapp/index.html" %}
+
+{% load static %}
+
+{% block title %}friends{% endblock title %}
+
+{% block css %}"{% static "myapp/css/talk_room.css" %}"{% endblock css %}
+
+{% block header %}
+<a href="{% url "friends" %}"><div class="iwbtg">＜</div></a>
+<div>{{ talk_user.get_username }}</div>
+<a href="#"><div class="f"><div class="iwktg">更新</div></div></a>
+{% endblock header %}
+
+{% block contents %}
+<div class="container">
+    {% for message in messages %}
+    <div class="dialog_box">
+        <div class="sender"><div>＞ {{ message.sender }}</div></div>
+        <div class="text"><div class="text_film"><div class="mt">{{ message.text }}</div><div class="mca">{{ message.created_at|date:"n/j"}}<br>{{ message.created_at|date:"G:i" }}</div></div></div>
+    </div>
+    {% endfor %}
+</div>
+<div class="footer">
+    <form method="post" class="form">
+        {% csrf_token %}
+        <div class="form_text">
+            <input type="text" name="text" id="id_text" required>
+            <button type="submit">送信</button>
+        </div>
+    </form>
+</div>
+{% endblock contents %}

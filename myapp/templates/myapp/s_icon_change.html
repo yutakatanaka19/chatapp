@@ -4,31 +4,30 @@
 
 {% block title %}friends{% endblock title %}
 
-{% block css %}"{% static "myapp/css/friends.css" %}"{% endblock css %}
+{% block css %}"{% static "myapp/css/sic.css" %}"{% endblock css %}
 
-{% block header %}友達{% endblock header %}
+{% block header %}アイコン変更{% endblock header %}
 
 {% block contents %}
 <div class="container">
-    {% for x, y, z in information_list %}
-    <div class="friend">
-        <a href="{% url 'talk_room' x.username %}">
-            {% if x.profile_picture %}
-                <div class="picture_film">
-                    <div class="picture_container">
-                        <img src="{{ x.profile_picture.url }}" alt="ps" class="profile_picture">
-                    </div>
-                </div>
-            {% else %}
-                <p>無いです。</p>
-            {% endif %}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            {{ form.profile_picture }}
+        </div>
+        <div class="current_icon_container">
             <div>
-                <div class="username">{{ x.get_username }}</div>
-                <div class="lm_info"><div class="lm">{{ y }}</div><div class="lm_time">{{ z|date:"n/j"}}<br>{{ z|date:"G:i" }}</div></div>
+                <img src="{{ request.user.profile_picture.url }}" alt="current_icon">
+                <div>your current icon</div>
             </div>
-        </a>
-    </div>
-    {% endfor %}
+            <button type="submit">変更</button>
+        </div>
+        <div>
+            {% for field in form %}
+            {{ field.errors }}
+            {% endfor %}
+        </div>
+    </form>
 </div>
 <div class="footer">
     <div class="footer_film">

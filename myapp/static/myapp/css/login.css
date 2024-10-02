@@ -1,0 +1,36 @@
+form {
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+}
+
+.form-group {
+    display: flex;
+    margin: 2px 0;
+}
+
+.form-group label {
+    width: 50%;
+}
+
+.form-group input {
+    width: 50%;
+}
+
+button {
+    width: 116px;
+    background-color: #fff;
+    padding: 8px 24px;
+    border: #bbb 2px solid;
+    border-radius: 12px;
+    margin: 0 auto;
+    margin-top: 20px;
+}
+
+.errorlist, .errorlist li {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    margin-top: 20px;
+}

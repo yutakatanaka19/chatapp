@@ -6,20 +6,11 @@
 
 {% block css %}"{% static "myapp/css/setting.css" %}"{% endblock css %}
 
-{% block header %}設定{% endblock header %}
+{% block header %}{% endblock header %}
 
 {% block contents %}
 <div class="container">
-    <div class="center">
-        <div><a href="{% url "suc" %}"><div>ユーザ名変更</div></a></div>
-        <div><a href="{% url "sec" %}"><div>メールアドレス変更</div></a></div>
-        <div><a href="{% url "sic" %}"><div>アイコン変更</div></a></div>
-        <div><a href="{% url "spc" %}"><div>パスワード変更</div></a></div>
-        <form action="{% url 'logout_view' %}" method="post">
-            {% csrf_token %}
-            <button type="submit">ログアウト</button>
-        </form>
-    </div>
+    <div class="secret">Changes have been completed.</div>
 </div>
 <div class="footer">
     <div class="footer_film">
