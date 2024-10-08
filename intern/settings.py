@@ -136,9 +136,9 @@ LOGIN_REDIRECT_URL = '/friends'
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-if os.path.isfile('.venv'):
+if os.path.isfile('.env'):
     env = environ.Env(DEBUG=(bool, False))
-    environ.Env.read_env('.venv')
+    environ.Env.read_env('.env')
 
     DEBUG = env('DEBUG')
     ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')

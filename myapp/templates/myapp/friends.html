@@ -12,7 +12,7 @@
 <div class="container">
     {% for x, y, z in information_list %}
     <div class="friend">
-        <a href="{% url 'talk_room' x.username %}">
+        <a href="{% url 'talk_room' x.id %}">
             {% if x.profile_picture %}
                 <div class="picture_film">
                     <div class="picture_container">

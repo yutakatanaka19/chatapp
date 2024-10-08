@@ -39,8 +39,12 @@ def friends(request):
     for friend_user in users:
         q_obj = Q(sender=request.user, recipient=friend_user) | Q(sender=friend_user, recipient=request.user)
         base = Message.objects.filter(q_obj).order_by('-created_at').first()
-        latest_message = base.text
-        latest_message_time = base.created_at
+        if base:
+            latest_message = base.text
+            latest_message_time = base.created_at
+        else:
+            latest_message = ''
+            latest_message_time = ''
         information_list.append((friend_user, latest_message, latest_message_time))
 
     return render(request, "myapp/friends.html", {"information_list": information_list})
@@ -48,10 +52,13 @@ def friends(request):
 @login_required
 @superuser_detector
 def talk_room(request, param):
-    talk_user = get_object_or_404(CustomUser, username=param)
+    talk_user = get_object_or_404(CustomUser, id=param)
     
-    if param == request.user.username:
-        return redirect("friends")
+    q_obj = Q(is_superuser=True) | Q(username=request.user.username)
+    id_list = CustomUser.objects.filter(q_obj).values_list('id', flat=True)
+    for x in id_list:
+        if param == x:
+            return redirect("friends")
 
     if request.method == "POST":
         form = MessageForm(request.POST)
@@ -60,7 +67,7 @@ def talk_room(request, param):
             message.sender = request.user
             message.recipient = talk_user
             message.save()
-            return redirect('talk_room', param=talk_user.username)
+            return redirect('talk_room', param=talk_user.id)
     else:
         form = MessageForm()
 
