@@ -1,21 +1,24 @@
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from django.contrib.auth import logout
 from django.contrib.auth.views import LoginView, PasswordChangeView, LogoutView
 from django.db.models import Q
-from .forms import CustomUserCreationForm, MessageForm,  UsernameChangingForm, EmailChangingForm, IconChangingForm, CustomPasswordChangeForm
+from .forms import SearchForm, MessageForm,  UsernameChangingForm, EmailChangingForm, IconChangingForm, CustomPasswordChangeForm
 from .models import CustomUser, Message
 
 def superuser_detector(view_func):
     def internal_func(request, *args, **kwargs):
         if request.user.is_superuser:
-            return redirect("login_view")
+            logout(request)
+            return redirect("account_login")
         return view_func(request, *args, **kwargs)
     return internal_func
 
 def index(request):
     return render(request, "myapp/index.html")
 
+""""
 def signup_view(request):
     if request.method == "POST":
         form = CustomUserCreationForm(request.POST, request.FILES)
@@ -25,14 +28,34 @@ def signup_view(request):
     else:
         form = CustomUserCreationForm()
     return render(request, "myapp/signup.html", {"form": form})
+"""
 
+""" 
 class CustomLoginView(LoginView):
     template_name = 'myapp/login.html'
-
+"""
+    
 @login_required
 @superuser_detector
 def friends(request):
-    users = CustomUser.objects.exclude(is_superuser=True).exclude(id=request.user.id)
+    users_precursor = CustomUser.objects.exclude(is_superuser=True).exclude(id=request.user.id)
+
+    if request.method == "POST":
+        form = SearchForm(request.POST)
+        str = request.POST.get('entered_text')
+
+        users = []
+
+        if form.is_valid():
+            if users_precursor:
+                for friend_user in users_precursor:
+                    if str in friend_user.username:
+                        users.append(friend_user)
+            else:
+                users = users_precursor
+    else:
+        form = SearchForm()
+        users = users_precursor
 
     information_list = []
 
@@ -47,7 +70,7 @@ def friends(request):
             latest_message_time = ''
         information_list.append((friend_user, latest_message, latest_message_time))
 
-    return render(request, "myapp/friends.html", {"information_list": information_list})
+    return render(request, "myapp/friends.html", {"information_list": information_list, "form": form})
 
 @login_required
 @superuser_detector
@@ -132,7 +155,7 @@ class CustomPasswordChangeView(PasswordChangeView):
 @method_decorator(login_required, name='dispatch')
 @method_decorator(superuser_detector, name='dispatch')
 class CustomLogoutView(LogoutView):
-    next_page = 'login_view'
+    next_page = 'account_login'
 
 @login_required
 @superuser_detector

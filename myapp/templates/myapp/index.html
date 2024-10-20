@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
     <link rel="stylesheet" href="{% static "myapp/css/base.css" %}">
     <link rel="stylesheet" href={% block css %}"{% static "myapp/css/index.css" %}"{% endblock css %}>
+    {% block redux %}{% endblock redux %}
 </head>
 <body>        
     <main>
@@ -21,8 +22,8 @@
                 </div>
                 {% block contents %}
                     <div class="center">
-                        <div><a href="{% url "login_view" %}"><div>ログイン</div></a></div>
-                        <div><a href="{% url "signup_view" %}"><div>会員登録</div></a></div>
+                        <div><a href="{% url "account_login" %}"><div>ログイン</div></a></div>
+                        <div><a href="{% url "account_signup" %}"><div>会員登録</div></a></div>
                     </div>
                 {% endblock contents %}
                 </div>

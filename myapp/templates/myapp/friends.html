@@ -6,9 +6,21 @@
 
 {% block css %}"{% static "myapp/css/friends.css" %}"{% endblock css %}
 
+{% block redux %}<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">{% endblock redux %}
+
 {% block header %}友達{% endblock header %}
 
 {% block contents %}
+<div class="searching_box">
+    <form method="post" class="form">
+        {% csrf_token %}
+        <div class="form_text">
+            <i class="fa-solid fa-magnifying-glass fa-2xl ad" style="color: #646464;" id="search-icon"></i>
+            {{ form.entered_text }}
+            <button type="submit">検索</button>
+        </div>
+    </form>
+</div>
 <div class="container">
     {% for x, y, z in information_list %}
     <div class="friend">

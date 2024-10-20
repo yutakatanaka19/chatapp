@@ -1,0 +1,39 @@
+{% extends "myapp/index.html" %}
+
+{% load static %}
+
+{% block title %}friends{% endblock title %}
+
+{% block css %}"{% static "myapp/css/signup.css" %}"{% endblock css %}
+
+{% block header %}{% endblock header %}
+
+{% block contents %}
+<div style="display: block; width: 90%; margin: 0 auto;">
+    {% if confirmation %}
+    <div>To confirm your user registration, please press the button below.</div>
+    <form method="post" action="{% url 'account_confirm_email' confirmation.key %}">
+        {% csrf_token %}
+        <button type="submit" style="width: unset;">Confirm</button>
+    </form>
+    {% else %}
+    <div>The link has expired.</div>
+    <a href="{% url "account_email" %}"><div>Reapply</div></a>
+    <style>
+        a {
+            display: flex;
+            justify-content: center;
+            color: black;
+            text-decoration: none;
+        }
+        
+        a > div {
+            padding: 8px 24px;
+            border: #bbb 2px solid;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+    </style>
+    {% endif %}
+</div>
+{% endblock contents %}
