@@ -8,6 +8,11 @@
     height: 79%;
     overflow-y: auto;
     overflow-x: hidden;
+    scrollbar-width: none;
+}
+
+.container::-webkit-scrollbar {
+    display: none;
 }
 
 .friend {
@@ -61,7 +66,7 @@ a:any-link {
 }
 
 .lm  {
-    width: 240px;
+    width: 235px;
     font-size: 13px;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -148,10 +153,28 @@ input:focus {
     outline: none;
 }
 
+input::placeholder {
+    font-size: 14.5px;
+}
+
 button {
     color: #646464;
     background-color: #ccc;
     border: #646464 2px solid;
     border-radius: 14px;
     padding: 3px 10px;
+}
+
+.highlighted_user {
+    display: flex;
+    align-items: end;
+    width: 280px;
+}
+
+.highlight1 {
+    background-color: #0ff;
+}
+
+.highlight2 {
+    background-color: #9ff;
 }

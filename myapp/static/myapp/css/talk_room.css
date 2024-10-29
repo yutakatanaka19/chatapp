@@ -38,6 +38,11 @@ a:any-link {
     height: 87%;
     overflow-y: auto;
     overflow-x: hidden;
+    scrollbar-width: none;
+}
+
+.container::-webkit-scrollbar {
+    display: none;
 }
 
 .dialog_box {
@@ -67,7 +72,7 @@ a:any-link {
 .mt {
     width: 100%;
     word-wrap: break-word;
-    margin: 7px 0;
+    margin: 9px 0;
 }
 
 .mca {

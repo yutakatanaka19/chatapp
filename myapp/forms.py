@@ -51,7 +51,7 @@ class SearchForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['entered_text'].widget.attrs['autocomplete'] = 'off'
-        self.fields['entered_text'].widget.attrs['placeholder'] = 'ユーザー名で検索'
+        self.fields['entered_text'].widget.attrs['placeholder'] = '名前かメールアドレスで検索'
 
 class MessageForm(forms.ModelForm):
     class Meta:

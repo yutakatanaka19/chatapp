@@ -1,6 +1,7 @@
 {% extends "myapp/index.html" %}
 
 {% load static %}
+{% load custom_tag %}
 
 {% block title %}friends{% endblock title %}
 
@@ -22,21 +23,35 @@
     </form>
 </div>
 <div class="container">
-    {% for x, y, z in information_list %}
+    {% for friend in friends %}
     <div class="friend">
-        <a href="{% url 'talk_room' x.id %}">
-            {% if x.profile_picture %}
+        <a href="{% url 'talk_room' friend.id %}">
+            {% if friend.profile_picture %}
                 <div class="picture_film">
                     <div class="picture_container">
-                        <img src="{{ x.profile_picture.url }}" alt="ps" class="profile_picture">
+                        <img src="{{ friend.profile_picture.url }}" alt="ps" class="profile_picture">
                     </div>
                 </div>
             {% else %}
-                <p>無いです。</p>
+                <div class="picture_film">
+                    <div class="picture_container pc_js">
+                        <div class="profile_picture"></div>
+                    </div>
+                </div>
             {% endif %}
             <div>
-                <div class="username">{{ x.get_username }}</div>
-                <div class="lm_info"><div class="lm">{{ y }}</div><div class="lm_time">{{ z|date:"n/j"}}<br>{{ z|date:"G:i" }}</div></div>
+                <div class="username">
+                {% if post_success %}
+                {% autoescape off %}<div class="highlighted_user">{% add_class friend.username str "highlight1" %}</div>{% endautoescape %}
+                {% else %}{{ friend.username }}{% endif %}
+                </div>
+                {% if post_success %}
+                {% autoescape off %}<div class="lm" style="width: 280px; color: #777;">{% add_class friend.email str "highlight2" %}</div>{% endautoescape %}
+                {% else  %}
+                    {% if friend.latest_message %}
+                    <div class="lm_info"><div class="lm">{{ friend.latest_message }}</div><div class="lm_time">{{ friend.latest_message_time|date:"n/j"}}<br>{{ friend.latest_message_time|date:"G:i" }}</div></div>
+                    {% else %}{% endif %}
+                {% endif %}
             </div>
         </a>
     </div>

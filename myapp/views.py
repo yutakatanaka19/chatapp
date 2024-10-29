@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.contrib.auth import logout
 from django.contrib.auth.views import LoginView, PasswordChangeView, LogoutView
-from django.db.models import Q
+from django.db.models import OuterRef, Q, Subquery
 from .forms import SearchForm, MessageForm,  UsernameChangingForm, EmailChangingForm, IconChangingForm, CustomPasswordChangeForm
 from .models import CustomUser, Message
 
@@ -38,25 +38,30 @@ class CustomLoginView(LoginView):
 @login_required
 @superuser_detector
 def friends(request):
-    users_precursor = CustomUser.objects.exclude(is_superuser=True).exclude(id=request.user.id)
+    str=''
+    post_success = False
+    users = CustomUser.objects.exclude(is_superuser=True).exclude(id=request.user.id)
+
+    q_obj = Q(sender_id=request.user.id, recipient_id=OuterRef('id')) | Q(sender_id=OuterRef('id'), recipient_id=request.user.id)
+    
+    lm_generator = Message.objects.filter(q_obj).order_by('-created_at').values('text')[:1]
+    lmt_generator = Message.objects.filter(q_obj).order_by('-created_at').values('created_at')[:1]
+
+    friends = users.annotate(latest_message=Subquery(lm_generator), latest_message_time=Subquery(lmt_generator))
 
     if request.method == "POST":
         form = SearchForm(request.POST)
         str = request.POST.get('entered_text')
-
-        users = []
-
         if form.is_valid():
-            if users_precursor:
-                for friend_user in users_precursor:
-                    if str in friend_user.username:
-                        users.append(friend_user)
-            else:
-                users = users_precursor
+            post_success = True
+            q_obj = Q(username__contains=str) | Q(email__contains=str)
+            friends = friends.filter(q_obj)
+        else:
+            friends = None
     else:
         form = SearchForm()
-        users = users_precursor
 
+    """
     information_list = []
 
     for friend_user in users:
@@ -69,19 +74,22 @@ def friends(request):
             latest_message = ''
             latest_message_time = ''
         information_list.append((friend_user, latest_message, latest_message_time))
+    """
 
-    return render(request, "myapp/friends.html", {"information_list": information_list, "form": form})
+    return render(request, "myapp/friends.html", {
+        "friends": friends,
+        "form": form,
+        "str":str,
+        "post_success": post_success,
+    })
 
 @login_required
 @superuser_detector
 def talk_room(request, param):
     talk_user = get_object_or_404(CustomUser, id=param)
-    
-    q_obj = Q(is_superuser=True) | Q(username=request.user.username)
-    id_list = CustomUser.objects.filter(q_obj).values_list('id', flat=True)
-    for x in id_list:
-        if param == x:
-            return redirect("friends")
+
+    if talk_user.is_superuser or param == request.user.id:
+        return redirect("friends")
 
     if request.method == "POST":
         form = MessageForm(request.POST)
@@ -96,7 +104,7 @@ def talk_room(request, param):
 
     q_obj = Q(sender=request.user, recipient=talk_user) | Q(sender=talk_user, recipient=request.user)
 
-    messages = Message.objects.filter(q_obj).order_by('created_at')
+    messages = Message.objects.filter(q_obj).order_by('created_at').select_related('sender', 'recipient')
 
     return render(request, "myapp/talk_room.html", {
         'talk_user': talk_user,
